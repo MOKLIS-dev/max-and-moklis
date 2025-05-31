@@ -35,9 +35,24 @@ reconnaitreVisiteur();
 // Synthèse vocale de Max
 function parler(texte) {
   const synth = window.speechSynthesis;
-  const voix = new SpeechSynthesisUtterance(texte);
-  voix.lang = "fr-FR";
-  synth.speak(voix);
+  const voixDisponible = synth.getVoices();
+
+  // On attend que les voix soient chargées si nécessaire
+  if (voixDisponible.length === 0) {
+    synth.onvoiceschanged = () => parler(texte);
+    return;
+  }
+
+  // On essaie de trouver une voix en français
+  const voixFr = voixDisponible.find(v => v.lang.startsWith("fr"));
+
+  const utterance = new SpeechSynthesisUtterance(texte);
+  utterance.lang = voixFr ? voixFr.lang : "fr-FR";
+  if (voixFr) utterance.voice = voixFr;
+  utterance.rate = 1;      // Vitesse normale
+  utterance.pitch = 1.1;   // Ton légèrement plus chaleureux
+
+  synth.speak(utterance);
 }
 
 

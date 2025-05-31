@@ -1,5 +1,6 @@
 document.getElementById('sendBtn').addEventListener('click', () => {
   const input = document.getElementById('userInput').value;
+  document.getElementById('userInput').focus();
   const chatBox = document.getElementById('chatBox');
   
   const userMessage = document.createElement('p');
